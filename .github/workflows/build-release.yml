@@ -1,12 +1,8 @@
 name: Build and Release Firmware
 
 on:
-  # For testing, we'll trigger manually
-  workflow_dispatch:
-  # Later, uncomment to trigger on specific tags
-  # push:
-  #   tags:
-  #     - 'v*'
+  release:
+    types: [published]
 
 permissions:
   contents: write
@@ -18,52 +14,51 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - name: Determine release type
+        id: release_type
+        run: |
+          TAG_NAME="${{ github.event.release.tag_name }}"
+          if [[ "$TAG_NAME" == *-precert ]]; then
+            echo "type=precert" >> $GITHUB_OUTPUT
+            echo "Building precertificate firmware for tag: $TAG_NAME"
+          elif [[ "$TAG_NAME" == *-self-signed ]]; then
+            echo "type=self-signed" >> $GITHUB_OUTPUT
+            echo "Building self-signed firmware for tag: $TAG_NAME"
+          else
+            echo "type=unknown" >> $GITHUB_OUTPUT
+            echo "Unknown release type for tag: $TAG_NAME"
+            exit 1
+          fi
+
       - name: Install dependencies
         run: |
           sudo apt-get update
           sudo apt install -y make curl tar gawk grep coreutils openssl
 
       - name: Build precertificate firmware
+        if: steps.release_type.outputs.type == 'precert'
         run: |
           cd precertificate-firmware
           make
 
       - name: Build self-signed firmware
+        if: steps.release_type.outputs.type == 'self-signed'
         run: |
           cd self-signed-firmware/automated
           make
 
-      - name: Create Precertificate Release
-        id: create_precert_release
+      - name: Upload precertificate firmware to release
+        if: steps.release_type.outputs.type == 'precert'
         uses: softprops/action-gh-release@v1
-        if: github.event_name == 'workflow_dispatch'
         with:
-          draft: true
-          tag_name: v0.0.1-precert
-          files: |
-            precertificate-firmware/firmware/Neato_4.2.0_102.tgz
-            precertificate-firmware/firmware/Neato_4.5.3_189.tgz
-            precertificate-firmware/firmware/Neato_4.6.0_72.tgz
-          name: Precertificate-signed Firmware Release
-          body: |
-            Precertificate-signed firmware versions:
-            - 4.2.0_102
-            - 4.5.3_189
-            - 4.6.0_72
+          files: precertificate-firmware/firmware/*.tgz
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       
-      - name: Create Self-signed Release
-        id: create_self_signed_release
+      - name: Upload self-signed firmware to release
+        if: steps.release_type.outputs.type == 'self-signed'
         uses: softprops/action-gh-release@v1
-        if: github.event_name == 'workflow_dispatch'
         with:
-          draft: true
-          tag_name: v0.0.1-self-signed
-          files: |
-            self-signed-firmware/automated/Neato_4.5.3_189.tgz
-          name: Self-signed Firmware Release
-          body: |
-            Self-signed firmware version:
-            - 4.5.3_189
-
+          files: self-signed-firmware/automated/*.tgz
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
