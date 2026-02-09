@@ -8,14 +8,17 @@ BASE_420=Neato_4.2.0_102
 BASE_453=Neato_4.5.3_189
 BASE_460=Neato_4.6.0_72
 
-URL_420=https://web.archive.org/web/20240506174833/https://neatorobotics-ota.s3.amazonaws.com/production/$(BASE_420).tgz
-URL_453=https://web.archive.org/web/20240506174708/https://neatorobotics-ota.s3.amazonaws.com/production/$(BASE_453).tgz
-URL_460=https://web.archive.org/web/20240506174741/https://neatorobotics-ota.s3.amazonaws.com/production/$(BASE_460).tgz
+DOWNLOAD_BASE_URL=https://github.com/RobertSundling/neato-botvac/releases/download/original-firmware/
+URL_420=$(DOWNLOAD_BASE_URL)$(BASE_420).tgz
+URL_453=$(DOWNLOAD_BASE_URL)$(BASE_453).tgz
+URL_460=$(DOWNLOAD_BASE_URL)$(BASE_460).tgz
 
 VERSIONS=420 453 460
 
-# Use this certificate
-CURRENT_CERTIFICATE=precertificates/2026-03-19/Signing.crt
+# Use this certificate - automatically find the latest
+CERT_DIRS := $(sort $(wildcard precertificates/*/))
+LATEST_CERT_DIR := $(lastword $(CERT_DIRS))
+CURRENT_CERTIFICATE=$(LATEST_CERT_DIR)Signing.crt
 CERTIFICATE_NAME=Signing.crt
 
 TMP_DIR=tmp
@@ -40,7 +43,7 @@ $(DOWNLOAD_DIR)/$(BASE_$(1)).tgz:
 	echo ""
 	echo "📥 Downloading firmware ($(1))..."
 	mkdir -p $(DOWNLOAD_DIR)
-	curl -s -o $$@ "$(URL_$(1))"
+	curl -L -s -o $$@ "$(URL_$(1))"
 	echo "✅ Downloaded $$(notdir $$@)"
 endef
 
@@ -76,6 +79,6 @@ $(WORK_DIR)/%/$(CERTIFICATE_NAME): $(WORK_DIR)/% $(CURRENT_CERTIFICATE)
 $(OUTPUT_DIR)/%.tgz: $(WORK_DIR)/% $(WORK_DIR)/%/$(CERTIFICATE_NAME)
 	echo "📦 Building $$(basename $@)..."
 	mkdir -p $(OUTPUT_DIR)
-	cd $(WORK_DIR)/$* && tar -czf "$(CURDIR)/$@" *
+	cd $(WORK_DIR)/$* && tar --force-local -czf "$(CURDIR)/$@" *
 	rm -rf $(TMP_DIR)
 	echo "✅ $(OUTPUT_DIR)/$* built successfully!"
