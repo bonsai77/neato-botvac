@@ -2,7 +2,7 @@
 
 This guide will help you replace an expired certificate in a Neato Botvac D3, D3 Pro, D4, D5, and D7 firmware package with an unexpired neato.cloud precertificate.
 
-This method allows installing firmware until at least March 19, 2026, when the most recent neato.cloud precertificate expires.
+This method allows installing firmware until at least February 19, 2027, when the most recent neato.cloud precertificate expires.
 
 **If you wish to simply download a pre-made firmware package with a precertificate already installed, see the [main README](../README.md) for this repository.**
 
@@ -27,7 +27,7 @@ When installing firmware on a Neato Botvac D3, D3 Pro, D4, D5, or D7, the robot 
 
 Neato Robotics has ceased operations. The last known certificate included with the firmware images expired on February 19, 2025.
 
-However, on February 18, 2025, the parent company of Neato Robotics, Vorwerk & Co. KG, acquired a new certificate that expires on March 19, 2026. They have not released any new firmware with this certificate, so we do not have the certificate itself. However, we do have the *precertificate* from the the public [Certificate Transparency](https://certificate.transparency.dev/) logs. Thankfully, this precertificate can be used to verify firmware signatures, because the robot does not care about the extra "CT Precertificate Poison" section that is present in precertificates.
+However, on February 18, 2025, the parent company of Neato Robotics, Vorwerk & Co. KG, has been acquiring new certificates . They have not released any new firmware with these certificates, so we do not have the certificates themselves. However, we do have the *precertificates* from the the public [Certificate Transparency](https://certificate.transparency.dev/) logs. Thankfully, a precertificate can be used to verify firmware signatures, because the robot does not care about the extra "CT Precertificate Poison" section that is present in precertificates.
 
 ## Details
 
@@ -44,7 +44,7 @@ When firmware is installed, the robot verifies the signature using the public ke
 
 We can replace the expired certificate with a new one, as long as the new certificate uses the same private key as the old one, and the same signature will continue to be valid.
 
-The precertificate expiring in 2026 does use this same private key. And, although precertificates have an extra section called "CT Precertificate Poison" that is not present in certificates, the robots ignore that section. Therefore, a precertificate works just as well as a certificate for the robot to verify the signature of the firmware image.
+The new precertificates do use this same private key. And, although precertificates have an extra section called "CT Precertificate Poison" that is not present in certificates, the robots ignore that section. Therefore, a precertificate works just as well as a certificate for the robot to verify the signature of the firmware image.
 
 ### Prerequisites
 
@@ -97,7 +97,7 @@ If you prefer to do this manually, rather than using the provided Makefile, you 
     openssl x509 -in Signing.crt -text -noout | grep 'Not After'
     ```
 
-    You should see the expiration date of the certificate. If it is before March 19, 2026, you have not replaced the certificate correctly. If you do not have `openssl` installed, you will need to skip this step.
+    You should see the expiration date of the certificate. If it shows a date earlier than the precertificate expiration, you have not replaced the certificate correctly. If you do not have `openssl` installed, you will need to skip this step.
 
 6. If you wish to verify the signature of the firmware image, and make sure that the certificate matches, you can do so using:
 

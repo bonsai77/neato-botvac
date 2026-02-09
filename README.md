@@ -1,5 +1,7 @@
 # Neato Botvac D3, D3 Pro, D4, D5, and D7 firmware
 
+This repository is for firmware images for the Neato Botvac D3, D3 Pro, D4, D5, and D7 robot vacuums.
+
 **Quick tip:** If you came here just to get firmware with a non-expired certificate, and otherwise know what you're doing, jump to the [Firmware download links](#firmware-download-links) section. There are working firmware images there.
 
 ## IMPORTANT UPDATE (October 2025)
@@ -28,9 +30,10 @@ I received this email announcement on October 19, 2025:
 > 
 > Thank you for your understanding and for being part of the Neato community all those years.
 
-So far, I have received this notice for one of my two robots, but both of them now show as offline in the app. The app gives me a message that it believes my phone is "offline" as well, saying "It seems you are not connected to the Internet." This is likely because their cloud servers no longer exist.
 
 **Without the cloud infrastructure in place, even with the latest firmware updates, your robot will no longer be able to connect to the Neato app.** References in this document to using the Neato app to check your firmware version are no longer applicable.
+
+> **Tip:** If you are looking to restore functionality to your robot after you have installed this firmware, please see the [Neato Robotics subreddit](https://www.reddit.com/r/NeatoRobotics/) or the [neato-connected repository on GitHub](https://github.com/Philip2809/neato-connected). There are people actively working on this.
 
 ## Table of contents
 
@@ -84,9 +87,9 @@ These are the official firmware packages but with the expired certificate replac
 | Version   | Firmware Date | Certificate Validity         | Download   |
 |-----------|---------------|------------------------------|------------|
 | **4.5.3_189** | **2019-10-29**    | **2025-02-20 to 2125-01-27** | **[Neato_4.5.3_189.tgz (self-signed certificate)](https://github.com/RobertSundling/neato-botvac/releases/download/v0.0.1-self-signed/Neato_4.5.3_189.tgz)** |
-| **4.5.3_189** | **2019-10-29**    | **2025-02-18 to 2026-03-19** | **[Neato_4.5.3_189.tgz (precertificate)](https://github.com/RobertSundling/neato-botvac/releases/download/v0.0.1-precert/Neato_4.5.3_189.tgz)** |
-| 4.6.0_72  | 2020-01-27    | 2025-02-18 to 2026-03-19 | [Neato_4.6.0_72.tgz (precertificate)](https://github.com/RobertSundling/neato-botvac/releases/download/v0.0.1-precert/Neato_4.6.0_72.tgz) |
-| 4.2.0_102 | 2018-07-12    | 2025-02-18 to 2026-03-19 | [Neato_4.2.0_102.tgz (precertificate)](https://github.com/RobertSundling/neato-botvac/releases/download/v0.0.1-precert/Neato_4.2.0_102.tgz) |
+| **4.5.3_189** | **2019-10-29**    | **2026-01-18 to 2027-02-19** | **[Neato_4.5.3_189.tgz (precertificate)](https://github.com/RobertSundling/neato-botvac/releases/download/expires-2027-02-19-precert/Neato_4.5.3_189.tgz)** |
+| 4.6.0_72  | 2020-01-27    | 2026-01-18 to 2027-02-19 | [Neato_4.6.0_72.tgz (precertificate)](https://github.com/RobertSundling/neato-botvac/releases/download/expires-2027-02-19-precert/Neato_4.6.0_72.tgz) |
+| 4.2.0_102 | 2018-07-12    | 2026-01-18 to 2027-02-19 | [Neato_4.2.0_102.tgz (precertificate)](https://github.com/RobertSundling/neato-botvac/releases/download/expires-2027-02-19-precert/Neato_4.2.0_102.tgz) |
 
 Most users should choose `4.5.3_189`. See the [Firmware Version Notes](#firmware-version-notes) section below for more information on these firmware versions.
 
@@ -207,7 +210,7 @@ Now we need to replace the `Signing.crt` file with something else. We have two o
 
 **This is currently the recommended method to use as of Feburary 22, 2025, as it is known to work.**
 
-It is possible to replace the expired certificate with a non-expired neato.cloud precertificate. For example, there is a neato.cloud precertificate that expires in March 2026.
+It is possible to replace the expired certificate with a non-expired neato.cloud precertificate.
 
 Full details on this method are provided in the [Precertificate Firmware](./precertificate-firmware/README.md) directory of this repository.  You can also download a ready-to-use firmware image created in this way directly from the [link above](#firmware-download-links).
 
